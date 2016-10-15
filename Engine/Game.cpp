@@ -30,19 +30,26 @@ void Game::Update(sf::RenderWindow * window, float dt)
 		}
 	}
 
-	//Update GameObjects
 	for (int i = 0; i < m_gameObjects.size(); i++)
 	{
 		GameObject* current = m_gameObjects[i];
 		Tile* tile = dynamic_cast<Tile*>(current);
 
-		if (tile->IsHovering())
+		if (tile != NULL && tile->IsHovering())
 		{
 			MoveToEnd(m_gameObjects, i);
+			break;
 		}
 
+	}
+	//Update GameObjects
+	for (int i = 0; i < m_gameObjects.size(); i++)
+	{
+		GameObject* current = m_gameObjects[i];
 		current->Update(window, dt);
 	}
+
+	HandleInput(window);
 }
 
 void Game::AddObject(GameObject * object)
@@ -62,6 +69,99 @@ void Game::ShowFonts(sf::RenderWindow* window)
 		gameOverText.setPosition(450, 150);
 		window->draw(gameOverText);
 	}
+}
+
+void Game::HandleInput(sf::RenderWindow* window)
+{
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		MousePressed();
+	}
+}
+
+void Game::MoveToEnd(std::vector<GameObject*>, int index)
+{
+	GameObject* tmp = m_gameObjects[index];
+	m_gameObjects.erase(m_gameObjects.begin() + index);
+	m_gameObjects.push_back(tmp);
+}
+
+void Game::MousePressed()
+{
+	Tile* tile = GetCurrentTile();
+	if (tile != nullptr && CanSelect(tile))
+	{
+		AddToSelected(tile);
+	}
+}
+
+void Game::MouseReleased()
+{
+		ClearSelected();
+}
+
+Tile* Game::GetCurrentTile()
+{
+	for (int i = 0; i < m_gameObjects.size(); i++)
+	{
+		GameObject* current = m_gameObjects[i];
+
+		Tile* currentTile = dynamic_cast<Tile*>(current);
+		
+		if (currentTile != NULL && currentTile->IsHovering())
+			return currentTile;
+	}
+
+	return NULL;
+}
+
+bool Game::CanSelect(Tile* tile)
+{
+	if (m_selectedTiles.size() == 0) // If vector is empty, add
+	{
+		return true;
+	}
+
+	if (m_selectedTiles[0] == tile) // If first index of vector is current tile, dont keep adding
+	{
+		return false;
+	}
+
+	if (m_selectedTiles[0]->GetType() == TileType::Sword && tile->GetType() == TileType::Enemy)
+	{
+		return true;
+	}
+
+	if (m_selectedTiles[0]->GetType() == TileType::Enemy && tile->GetType() == TileType::Sword)
+	{
+		return true;
+	}
+
+	return m_selectedTiles[0]->GetType() == tile->GetType(); //If current tile matches the tile type of the vector
+}
+
+void Game::AddToSelected(Tile* tile)
+{
+	tile->SetSelection(true);
+	m_selectedTiles.push_back(tile);
+}
+
+void Game::ClearSelected()
+{
+	for (int i = 0; i < m_selectedTiles.size(); i++)
+	{
+		m_selectedTiles[i]->SetSelection(false);
+	}
+
+	if (m_selectedTiles.size() >= 3)
+	{
+		for (int i = 0; i < m_selectedTiles.size(); i++)
+		{
+			RemoveTile(m_selectedTiles[i]);
+		}
+	}
+
+	m_selectedTiles.clear();
 }
 
 void Game::CreateBoard()
@@ -91,7 +191,7 @@ Tile* Game::CreateTile(const sf::Vector2f& pos)
 		tile = new ArmorTile("Sprites/armor.jpg", pos);
 		break;
 	case 3:
-		tile =  new EnemyTile("Sprites/skull.jpg", pos);
+		tile = new EnemyTile("Sprites/skull.jpg", pos);
 		break;
 	case 4:
 		tile = new HealthTile("Sprites/health.jpg", pos);
@@ -104,17 +204,7 @@ Tile* Game::CreateTile(const sf::Vector2f& pos)
 	return tile;
 }
 
-void Game::MoveToEnd(std::vector<GameObject*>, int index)
+void Game::RemoveTile(Tile* tile)
 {
-	GameObject* tmp = m_gameObjects[index];
-	m_gameObjects.erase(m_gameObjects.begin() + index);
-	m_gameObjects.push_back(tmp);
+	tile->Destroy();
 }
-
-//std::vector<Tile*> GetNeighbors(int x, int y, int maxX, int maxY)
-//{
-//	std::vector<Tile*> neighbors;
-//
-//	if (x > 0)
-//		neighbors.push_back( x - 1, y );
-//}

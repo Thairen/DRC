@@ -8,7 +8,7 @@ public:
 
 	SwordTile(std::string texturePath, const sf::Vector2f& pos);
 
-	virtual void AddStatus(GameObject* object);
+	virtual void Destroy();
 };
 
 class ArmorTile : public Tile
@@ -17,7 +17,7 @@ public:
 
 	ArmorTile(std::string texturePath, const sf::Vector2f& pos);
 
-	virtual void AddStatus(GameObject* object);
+	virtual void Destroy();
 };
 class HealthTile : public Tile
 {
@@ -25,15 +25,14 @@ public:
 
 	HealthTile(std::string texturePath, const sf::Vector2f& pos);
 
-	virtual void AddStatus(GameObject* object);
+	virtual void Destroy();
 };
 class EnemyTile : public Tile
 {
 public:
 
 	EnemyTile(std::string texturePath, const sf::Vector2f& pos);
-
-	virtual void AddStatus(GameObject* object);
+	virtual void Destroy();
 };
 
 class GoldTile : public Tile
@@ -41,6 +40,5 @@ class GoldTile : public Tile
 public:
 
 	GoldTile(std::string texturePath, const sf::Vector2f& pos);
-
-	virtual void AddStatus(GameObject* object);
+	virtual void Destroy();
 };

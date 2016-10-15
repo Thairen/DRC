@@ -16,18 +16,27 @@ public:
 	void AddObject(GameObject* object);
 	void GameOver() { m_gameOver = true;  }
 	void ShowFonts(sf::RenderWindow* window);
+	void HandleInput(sf::RenderWindow* window);
+	Tile* GetCurrentTile();
+	bool CanSelect(Tile* tile);
+	void AddToSelected(Tile* tile);
+	void ClearSelected();
 
 	void CreateBoard(); // Fill the board with objects
 	Tile* CreateTile(const sf::Vector2f& pos);
+	void RemoveTile(Tile* tile);
 
 	void MoveToEnd(std::vector<GameObject*>, int index);
-	std::vector<Tile*> GetNeighbors(int i, int j, int maxI, int maxJ);
+
+	void MousePressed();
+	void MouseReleased();
 
 private:
 
 	Tile* gameBoard[row][col];
 
 	std::vector<GameObject*> m_gameObjects;
+	std::vector<Tile*> m_selectedTiles;
 	bool m_gameOver;
 	sf::Font m_mainFont;
 };

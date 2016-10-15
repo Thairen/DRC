@@ -16,11 +16,12 @@ public:
 	TileType GetType() { return m_type; }
 	void SetType(TileType tileType) { m_type = tileType; }
 	bool IsHovering() { return m_isHovering; }
+	bool IsSelected() { return m_isSelected; }
+
+	void SetSelection(bool t) { m_isSelected = t; }
 
 	virtual void Draw(sf::RenderWindow* window);
 	virtual void Update(sf::RenderWindow * window, float dt);
-
-	virtual void AddStatus(GameObject* object);
 
 	void Hovering(sf::RenderWindow * window);
 
@@ -30,8 +31,6 @@ private:
 
 	bool m_isSelected;
 	bool m_isHovering;
-	float selectedTimer;
-	float clickTimer;
 	TileType m_type;
 };
 

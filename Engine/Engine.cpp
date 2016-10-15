@@ -36,6 +36,15 @@ int main()
 			}
 			if (event.type == sf::Event::Closed)
 				window.close();
+
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+			{
+				game.MousePressed();
+			}
+
+			if (event.type == sf::Event::MouseButtonReleased)
+				game.MouseReleased();
+				
 		}
 		
 
