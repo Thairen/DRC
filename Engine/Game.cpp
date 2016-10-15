@@ -122,8 +122,8 @@ bool Game::CanSelect(Tile* tile)
 		return true;
 	}
 
-	if (m_selectedTiles[0] == tile) // If first index of vector is current tile, dont keep adding
-	{
+	if (tile->IsSelected())  // check if tile is already in vector
+	{                     
 		return false;
 	}
 
