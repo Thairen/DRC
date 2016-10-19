@@ -21,7 +21,7 @@ public:
 	void SetSelection(bool t) { m_isSelected = t; }
 
 	virtual void Draw(sf::RenderWindow* window);
-	virtual void Update(sf::RenderWindow * window, float dt);
+	virtual void Update(sf::RenderWindow* window, float dt);
 
 	void Hovering(sf::RenderWindow * window);
 

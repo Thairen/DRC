@@ -20,12 +20,13 @@ public:
 	bool IsDestroyed();
 
 	sf::Sprite m_sprite;
+	Game* m_owner;
 
 protected:
 	sf::Vector2f m_pos;
 
 	sf::Texture m_texture;
 
-	Game* m_owner;
+	
 	bool m_destroyed;
 };

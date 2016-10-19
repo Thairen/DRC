@@ -50,8 +50,10 @@ int main()
 
 
 		window.clear();	
-		game.Update(&window, dt.asSeconds());
+
 		game.Draw(&window);
+		game.Update(&window, dt.asSeconds());
+		
 		window.display();
 	}
 

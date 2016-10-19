@@ -5,6 +5,8 @@
 Game::Game()
 	: m_gameOver(false)
 {
+	player = new Player(sf::Vector2f(0, 0));
+	AddObject(player);
 	m_mainFont.loadFromFile("Fonts/kenpixel_high_square.ttf");
 	CreateBoard();
 }
@@ -19,6 +21,7 @@ void Game::Draw(sf::RenderWindow * window)
 
 void Game::Update(sf::RenderWindow * window, float dt)
 {
+	
 	//Check and delete destroyed objects
 	for (int i = m_gameObjects.size() - 1; i >= 0; i--)
 	{
@@ -50,6 +53,7 @@ void Game::Update(sf::RenderWindow * window, float dt)
 	}
 
 	HandleInput(window);
+	//ShiftTiles();
 }
 
 void Game::AddObject(GameObject * object)
@@ -84,6 +88,25 @@ void Game::MoveToEnd(std::vector<GameObject*>, int index)
 	GameObject* tmp = m_gameObjects[index];
 	m_gameObjects.erase(m_gameObjects.begin() + index);
 	m_gameObjects.push_back(tmp);
+}
+
+void Game::ShiftTiles()
+{
+	for (int i = row - 1; i > 0; i--)
+	{
+		for (int j = col -1; j > 0; j--)
+		{
+			Tile* tile = gameBoard[i][j]; //Get current tile
+			Tile* check = gameBoard[i + 1][j];
+			if (check != NULL && check->IsDestroyed())
+			{
+				if(i + 1 < col)
+					gameBoard[i + 1][j] = NULL;
+
+				tile->SetPos(sf::Vector2f(check->GetPosition().x, check->GetPosition().y));
+			}
+		}
+	}
 }
 
 void Game::MousePressed()
@@ -170,7 +193,7 @@ void Game::CreateBoard()
 	{
 		for (int j = 0; j < col; j++)
 		{
-			gameBoard[i][j] = CreateTile(sf::Vector2f(450.f + j * 62.f, 100.f + i * 62.f));
+			gameBoard[i][j] = CreateTile(sf::Vector2f(350.f + j * 62.f, 100.f + i * 62.f));
 			//Add the tile
 			AddObject(gameBoard[i][j]);
 		}
