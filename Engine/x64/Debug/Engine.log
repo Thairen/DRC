@@ -1,3 +1,2 @@
-﻿  Game.cpp
-c:\users\aicaoc\desktop\drc\engine\game.cpp(26): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+﻿  Tile.cpp
   Engine.vcxproj -> C:\Users\aicaoc\Desktop\DRC\Engine\x64\Debug\Engine.exe

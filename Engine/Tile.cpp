@@ -4,7 +4,8 @@
 
 Tile::Tile(std::string texturePath, const sf::Vector2f& pos) : GameObject(texturePath, pos),
 m_isSelected(false),
-m_isHovering(false)
+m_isHovering(false),
+m_row(0), m_column(0)
 {
 	border = new sf::RectangleShape();
 	border->setPosition(this->GetPosition());
@@ -33,6 +34,8 @@ void Tile::Update(sf::RenderWindow * window, float dt)
 {
 	GameObject::Update(window, dt);
 	Hovering(window);
+
+	border->setPosition(this->GetPosition());
 
 	if (m_isSelected)
 	{

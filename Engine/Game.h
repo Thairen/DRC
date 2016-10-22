@@ -24,8 +24,9 @@ public:
 	void ClearSelected(); // Clear selected Vector on mouse up
 
 	void CreateBoard(); // Fill the board with objects
-	Tile* CreateTile(const sf::Vector2f& pos);
-	void RemoveTile(Tile* tile); //Remove tiles in selection list
+	Tile* CreateTile(const sf::Vector2f& pos, int row, int col);
+	void RemoveTile(int row, int col); //Remove tiles in selection list
+	bool TilesToDrop(int row, int col);
 
 	void MoveToEnd(std::vector<GameObject*>, int index); //Move hovering tile to end of vector (DRAW LAST)
 	void ShiftTiles(); //Move Tiles down as tiles below get destroyed

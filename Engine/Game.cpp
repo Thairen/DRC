@@ -53,7 +53,7 @@ void Game::Update(sf::RenderWindow * window, float dt)
 	}
 
 	HandleInput(window);
-	//ShiftTiles();
+	ShiftTiles();
 }
 
 void Game::AddObject(GameObject * object)
@@ -92,21 +92,52 @@ void Game::MoveToEnd(std::vector<GameObject*>, int index)
 
 void Game::ShiftTiles()
 {
-	for (int i = row - 1; i > 0; i--)
-	{
-		for (int j = col -1; j > 0; j--)
-		{
-			Tile* tile = gameBoard[i][j]; //Get current tile
-			Tile* check = gameBoard[i + 1][j];
-			if (check != NULL && check->IsDestroyed() && tile != NULL)
-			{
-				if(i + 1 < col)
-					gameBoard[i + 1][j] = NULL;
+	// Go through every column first (For loop over each column)
+		// For every row (For loop over each row)
+			// While the current element is empty
+				// drop every tile above it one row down(While the current element is empty)
 
-				tile->SetPos(sf::Vector2f(check->GetPosition().x, check->GetPosition().y));
+	for (int i = row - 1; i >= 0; i--)
+	{
+		for (int j = col - 1; j >= 0; j--)
+		{
+			Tile* current = gameBoard[i][j];
+
+			while (current == NULL && TilesToDrop(i, j))
+			{
+				for (int tilesAbove = i; tilesAbove > 0; tilesAbove--)
+				{
+					gameBoard[tilesAbove][j] = gameBoard[tilesAbove - 1][j];
+
+					Tile* tile = gameBoard[tilesAbove][j];
+
+					if (tile != NULL)
+					{
+						tile->SetPos(sf::Vector2f(tile->GetPosition().x, tile->GetPosition().y + 62.f));
+						tile->m_row++;
+					}
+				}
+				gameBoard[0][j] = NULL;
+				current = gameBoard[i][j];
 			}
 		}
 	}
+}
+
+bool Game::TilesToDrop(int row, int col)
+{
+	bool result = false;
+
+	for (int i = row - 1; i >= 0; i--)
+	{
+		if (gameBoard[i][col] != NULL)
+		{
+			result = true;
+			break;
+		}
+	}
+
+	return result;
 }
 
 void Game::AddPoints(TileType type, float val)
@@ -205,7 +236,7 @@ void Game::ClearSelected()
 	{
 		for (int i = 0; i < m_selectedTiles.size(); i++)
 		{
-			RemoveTile(m_selectedTiles[i]);
+			RemoveTile(m_selectedTiles[i]->m_row, m_selectedTiles[i]->m_column);
 		}
 	}
 
@@ -218,14 +249,14 @@ void Game::CreateBoard()
 	{
 		for (int j = 0; j < col; j++)
 		{
-			gameBoard[i][j] = CreateTile(sf::Vector2f(350.f + j * 62.f, 100.f + i * 62.f));
+			gameBoard[i][j] = CreateTile(sf::Vector2f(350.f + j * 62.f, 100.f + i * 62.f), i, j);
 			//Add the tile
 			AddObject(gameBoard[i][j]);
 		}
 	}
 }
 
-Tile* Game::CreateTile(const sf::Vector2f& pos)
+Tile* Game::CreateTile(const sf::Vector2f& pos, int row, int col)
 {
 	int choice = rand() % 5 + 1;
 	Tile* tile = nullptr;
@@ -249,12 +280,22 @@ Tile* Game::CreateTile(const sf::Vector2f& pos)
 		break;
 	}
 
+	tile->m_row = row;
+	tile->m_column = col;
+
 	return tile;
 }
 
-void Game::RemoveTile(Tile* tile)
+void Game::RemoveTile(int row, int col)
 {
-	AddPoints(tile->GetType(), 2);
+	//AddPoints(tile->GetType(), 2);
 	//Need to add in player behavior for setting stats on how much is offered based on the match.
-	tile->Destroy();
+	Tile* tile = gameBoard[row][col];
+
+	if (tile != NULL)
+	{
+		tile->Destroy();
+	}
+
+	gameBoard[row][col] = NULL;
 }

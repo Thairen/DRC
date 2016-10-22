@@ -25,6 +25,8 @@ public:
 
 	void Hovering(sf::RenderWindow * window);
 
+	int m_row, m_column;
+
 private:
 
 	sf::RectangleShape* border;
