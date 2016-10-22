@@ -110,5 +110,4 @@ void GoldTile::Destroy()
 {
 	GameObject::Destroy();
 	//ADD Whatever Tile behavior when destroyed ----------------
-	m_owner->player->Add
 }

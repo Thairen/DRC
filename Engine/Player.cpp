@@ -73,7 +73,7 @@ void Player::ShowStats(sf::RenderWindow* window)
 
 	sf::Text upRead;
 	upRead.setFont(m_font);
-	upRead.setString("Upgrade Bar: " + std::to_string((int)m_exp->GetCurrent()) + " / " + std::to_string((int)m_exp->GetMax()));
+	upRead.setString("Upgrade Bar: " + std::to_string((int)m_upgrade->GetCurrent()) + " / " + std::to_string((int)m_upgrade->GetMax()));
 	upRead.setCharacterSize(17);
 	upRead.setColor(sf::Color::Blue);
 	upRead.setPosition(sf::Vector2f(525, 625));//figure where to set
@@ -87,4 +87,10 @@ void Player::ShowStats(sf::RenderWindow* window)
 	goldRead.setPosition(sf::Vector2f(150, 580));//figure where to set
 	window->draw(goldRead);
 
+}
+
+float Player::Attack()
+{
+	//Need to take in an add to attack, m_weaponAttack * number of swords matched
+	return m_baseAttack->GetMax() + (m_weaponAttack->GetMax());
 }

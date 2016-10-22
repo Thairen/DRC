@@ -98,7 +98,7 @@ void Game::ShiftTiles()
 		{
 			Tile* tile = gameBoard[i][j]; //Get current tile
 			Tile* check = gameBoard[i + 1][j];
-			if (check != NULL && check->IsDestroyed())
+			if (check != NULL && check->IsDestroyed() && tile != NULL)
 			{
 				if(i + 1 < col)
 					gameBoard[i + 1][j] = NULL;
@@ -106,6 +106,31 @@ void Game::ShiftTiles()
 				tile->SetPos(sf::Vector2f(check->GetPosition().x, check->GetPosition().y));
 			}
 		}
+	}
+}
+
+void Game::AddPoints(TileType type, float val)
+{
+	switch (type)
+	{
+	case TileType::Armor:
+		player->AddArmor(val);
+		break;
+
+	case TileType::Gold:
+		player->AddGold(val);
+		break;
+
+	case TileType::Health:
+		player->AddHealth(val);
+		break;
+
+	case TileType::Enemy:
+		player->AddExp(val);
+		break;
+
+	case TileType::Sword:
+		break;
 	}
 }
 
@@ -229,5 +254,7 @@ Tile* Game::CreateTile(const sf::Vector2f& pos)
 
 void Game::RemoveTile(Tile* tile)
 {
+	AddPoints(tile->GetType(), 2);
+	//Need to add in player behavior for setting stats on how much is offered based on the match.
 	tile->Destroy();
 }

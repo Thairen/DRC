@@ -29,6 +29,7 @@ public:
 
 	void MoveToEnd(std::vector<GameObject*>, int index); //Move hovering tile to end of vector (DRAW LAST)
 	void ShiftTiles(); //Move Tiles down as tiles below get destroyed
+	void AddPoints(TileType type, float val);
 
 	void MousePressed();
 	void MouseReleased();
