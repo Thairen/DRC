@@ -27,10 +27,12 @@ public:
 	Tile* CreateTile(const sf::Vector2f& pos, int row, int col);
 	void RemoveTile(int row, int col); //Remove tiles in selection list
 	bool TilesToDrop(int row, int col);
+	void AddNewTiles(int row, int col);
 
 	void MoveToEnd(std::vector<GameObject*>, int index); //Move hovering tile to end of vector (DRAW LAST)
 	void ShiftTiles(); //Move Tiles down as tiles below get destroyed
 	void AddPoints(TileType type, float val);
+	bool IsNeighbor(Tile* target, Tile* lastSelected);
 
 	void MousePressed();
 	void MouseReleased();

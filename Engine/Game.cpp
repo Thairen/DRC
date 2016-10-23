@@ -53,7 +53,8 @@ void Game::Update(sf::RenderWindow * window, float dt)
 	}
 
 	HandleInput(window);
-	ShiftTiles();
+	ShiftTiles(); //Move tiles down when tiles underneath are destroyed
+
 }
 
 void Game::AddObject(GameObject * object)
@@ -91,19 +92,14 @@ void Game::MoveToEnd(std::vector<GameObject*>, int index)
 }
 
 void Game::ShiftTiles()
-{
-	// Go through every column first (For loop over each column)
-		// For every row (For loop over each row)
-			// While the current element is empty
-				// drop every tile above it one row down(While the current element is empty)
-
-	for (int i = row - 1; i >= 0; i--)
+{			
+	for (int i = row - 1; i >= 0; i--)  // Go through every column first (For loop over each column)
 	{
-		for (int j = col - 1; j >= 0; j--)
+		for (int j = col - 1; j >= 0; j--)  	// For every row (For loop over each row)
 		{
 			Tile* current = gameBoard[i][j];
 
-			while (current == NULL && TilesToDrop(i, j))
+			while (current == NULL && TilesToDrop(i, j)) // While tile is void and tiles are above an empty space...
 			{
 				for (int tilesAbove = i; tilesAbove > 0; tilesAbove--)
 				{
@@ -111,6 +107,7 @@ void Game::ShiftTiles()
 
 					Tile* tile = gameBoard[tilesAbove][j];
 
+					// drop every tile above it one row down(While the current element is empty)
 					if (tile != NULL)
 					{
 						tile->SetPos(sf::Vector2f(tile->GetPosition().x, tile->GetPosition().y + 62.f));
@@ -119,7 +116,21 @@ void Game::ShiftTiles()
 				}
 				gameBoard[0][j] = NULL;
 				current = gameBoard[i][j];
+
+				AddNewTiles(i, j);
 			}
+		}
+	}
+}
+
+void Game::AddNewTiles(int row, int col)
+{
+	for (int i = row - 1; i >= 0; i--)
+	{
+		if (gameBoard[0][col] == NULL)
+		{
+			gameBoard[0][col] = CreateTile(sf::Vector2f(350.f + col * 62.f, 100.f + 0 * 62.f), 0, col);
+			AddObject(gameBoard[0][col]);
 		}
 	}
 }
@@ -161,9 +172,52 @@ void Game::AddPoints(TileType type, float val)
 		break;
 
 	case TileType::Sword:
+		//Add to player damage
 		break;
 	}
 }
+
+bool Game::IsNeighbor(Tile* target, Tile* lastSelected)
+{
+	bool neighbor = false;
+
+	if (lastSelected->m_column + 1 == target->m_column && lastSelected->m_row == target->m_row) 
+	{
+		neighbor = true;// Down
+	}
+	if (lastSelected->m_column + 1 == target->m_column && lastSelected->m_row + 1 == target->m_row)
+	{
+		neighbor = true;  //Down Right
+	}
+	if (lastSelected->m_column == target->m_column && lastSelected->m_row + 1 == target->m_row)
+	{
+		neighbor = true; //Right
+	}
+	if (lastSelected->m_column - 1 == target->m_column && lastSelected->m_row + 1 == target->m_row)
+	{
+		neighbor = true; // Up Right
+	}
+	if (lastSelected->m_column == target->m_column && lastSelected->m_row - 1 == target->m_row)
+	{
+		neighbor = true; // Up
+	}
+	if (lastSelected->m_column - 1 == target->m_column && lastSelected->m_row - 1 == target->m_row)
+	{
+		neighbor = true;// Up Left
+	}
+	if (lastSelected->m_column - 1 == target->m_column && lastSelected->m_row == target->m_row)
+	{
+		neighbor = true; // Left
+	}
+	if (lastSelected->m_column + 1 == target->m_column && lastSelected->m_row - 1 == target->m_row)
+	{
+		neighbor = true; // Down Left
+	}
+
+
+	return neighbor;
+}
+
 
 void Game::MousePressed()
 {
@@ -196,6 +250,7 @@ Tile* Game::GetCurrentTile()
 
 bool Game::CanSelect(Tile* tile)
 {
+
 	if (m_selectedTiles.size() == 0) // If vector is empty, add
 	{
 		return true;
@@ -206,17 +261,25 @@ bool Game::CanSelect(Tile* tile)
 		return false;
 	}
 
-	if (m_selectedTiles[0]->GetType() == TileType::Sword && tile->GetType() == TileType::Enemy)
+	if (IsNeighbor(tile, m_selectedTiles.back())) //If current and last tile are neighbors
 	{
-		return true;
+		if (m_selectedTiles[0]->GetType() == TileType::Sword && tile->GetType() == TileType::Enemy)
+		{
+			return true; //If first selected is sword and current tile is enemy ADD
+		}
+
+		if (m_selectedTiles[0]->GetType() == TileType::Enemy && tile->GetType() == TileType::Sword)
+		{
+			return true; //If first selected is enemy and current tile is sword ADD
+		}
+
+		if (m_selectedTiles[0]->GetType() == tile->GetType())
+		{
+			return true; // If first selected shares type with current tile ADD
+		}
 	}
 
-	if (m_selectedTiles[0]->GetType() == TileType::Enemy && tile->GetType() == TileType::Sword)
-	{
-		return true;
-	}
-
-	return m_selectedTiles[0]->GetType() == tile->GetType(); //If current tile matches the tile type of the vector
+	return false; //No match found
 }
 
 void Game::AddToSelected(Tile* tile)
@@ -288,9 +351,11 @@ Tile* Game::CreateTile(const sf::Vector2f& pos, int row, int col)
 
 void Game::RemoveTile(int row, int col)
 {
-	//AddPoints(tile->GetType(), 2);
+	
 	//Need to add in player behavior for setting stats on how much is offered based on the match.
 	Tile* tile = gameBoard[row][col];
+
+	AddPoints(tile->GetType(), 2);
 
 	if (tile != NULL)
 	{
