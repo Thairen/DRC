@@ -17,7 +17,8 @@ public:
 	void AddExp(float val) { m_exp->AddCurrent(val); m_exp->BalanceStat();}
 	void AddGold(float val) { m_gold->AddCurrent(val); m_gold->BalanceStat();}
 
-	float Attack();
+	float Attack(float mod);
+	void TakeDamage(float mod);
 
 private:
 	Stat* m_baseAttack;

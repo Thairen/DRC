@@ -89,8 +89,13 @@ void Player::ShowStats(sf::RenderWindow* window)
 
 }
 
-float Player::Attack()
+float Player::Attack(float mod)
 {
 	//Need to take in an add to attack, m_weaponAttack * number of swords matched
-	return m_baseAttack->GetMax() + (m_weaponAttack->GetMax());
+	return m_baseAttack->GetMax() + (m_weaponAttack->GetMax() * mod);
+}
+
+void Player::TakeDamage(float amount)
+{
+	m_health->SubtractCurrent(amount);
 }

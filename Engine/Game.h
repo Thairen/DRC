@@ -34,6 +34,8 @@ public:
 	void AddPoints(TileType type, float val);
 	bool IsNeighbor(Tile* target, Tile* lastSelected);
 
+	void Combat();
+
 	void MousePressed();
 	void MouseReleased();
 

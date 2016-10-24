@@ -45,10 +45,10 @@ void HealthTile::Destroy()
 EnemyTile::EnemyTile(std::string texturePath, const sf::Vector2f& pos) : Tile(texturePath, pos)
 {
 	SetType(TileType::Enemy);
-	m_health = new Stat(5.f);
+	m_health = new Stat(4.f);
 	m_attack = new Stat(1.f);
-	m_defense = new Stat(3.f);
-	m_exp = new Stat(10.f);
+	m_defense = new Stat(0.f);
+	m_exp = new Stat(5.f);
 
 	m_font.loadFromFile("Fonts/kenpixel_high_square.ttf");
 }
@@ -63,13 +63,13 @@ void EnemyTile::Destroy()
 void EnemyTile::Draw(sf::RenderWindow* window)
 {
 	Tile::Draw(window);
-	ShowStats(window);
+	
 }
 
 void EnemyTile::Update(sf::RenderWindow* window, float dt)
 {
 	Tile::Update(window, dt);
-	
+	ShowStats(window);
 }
 
 void EnemyTile::ShowStats(sf::RenderWindow* window)
@@ -97,6 +97,23 @@ void EnemyTile::ShowStats(sf::RenderWindow* window)
 	healthRead.setPosition(this->GetPosition().x + 20, this->GetPosition().y + 10);//figure where to set
 	window->draw(healthRead);
 	
+}
+
+float EnemyTile::TakeDamage(float dmg)
+{
+	dmg -= m_defense->GetCurrent();
+	float result = 0.f;
+
+	if (dmg > 0)
+	{
+		m_health->SubtractCurrent(dmg);
+
+		if (m_health->GetCurrent() <= 0)
+		{
+			return 0; //killed, return exp
+		}
+	}
+	return m_health->GetCurrent(); // Enemy still alive, doesnt destroy.
 }
 
 // Gold CLASS FUNCS ===============================================================

@@ -14,6 +14,8 @@ public:
 	void AddCurrent(float val) { m_current += val; }
 	void AddMax(float val) { m_current += val; }
 
+	void SubtractCurrent(float val) { m_current -= val; }
+
 	void BalanceStat();
 
 

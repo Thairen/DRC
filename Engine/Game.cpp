@@ -146,6 +146,12 @@ bool Game::TilesToDrop(int row, int col)
 			result = true;
 			break;
 		}
+
+		if (i == 0)
+		{
+			result = true;
+			break;
+		}
 	}
 
 	return result;
@@ -216,6 +222,60 @@ bool Game::IsNeighbor(Tile* target, Tile* lastSelected)
 
 
 	return neighbor;
+}
+
+void Game::Combat()
+{
+	//First, loop through list to find swords
+	float swordCount = 0.f; //Number of swords
+	float enemiesKilled = 0.f; //Knock enemies out from list if killed
+
+	for (int i = 0; i < m_selectedTiles.size(); i++)
+	{
+		Tile* current = m_selectedTiles[i];
+		SwordTile* sword = dynamic_cast<SwordTile*>(current);
+
+		if (sword)
+		{
+			swordCount += 1.f; // Add a multiplier for attack damage
+		}
+	}
+
+	//Loop for enemies
+	for (int i = 0; i < m_selectedTiles.size(); i++)
+	{
+		Tile* current = m_selectedTiles[i];
+		EnemyTile* enemy = dynamic_cast<EnemyTile*>(current);
+
+		if (enemy)
+		{
+			float result = enemy->TakeDamage(player->Attack(swordCount));
+
+			if (result == 0)
+			{
+				enemy->SetDamage(0.f);
+			}
+
+		}
+	}
+
+	//Now loop gameObject list to grab all enemies
+	float enemyDamage = 0.f;
+
+	for (int i = 0; i < m_gameObjects.size(); i++)
+	{
+		GameObject* current = m_gameObjects[i]; 
+		EnemyTile* enemy = dynamic_cast<EnemyTile*>(current);
+
+		if (enemy)
+		{
+			enemyDamage += enemy->GetDamage();
+		}
+	}
+
+	//Resolve the damage
+	player->TakeDamage(enemyDamage);
+
 }
 
 
@@ -299,7 +359,8 @@ void Game::ClearSelected()
 	{
 		for (int i = 0; i < m_selectedTiles.size(); i++)
 		{
-			RemoveTile(m_selectedTiles[i]->m_row, m_selectedTiles[i]->m_column);
+			Combat(); // Do combat if player attacks enemies
+			RemoveTile(m_selectedTiles[i]->m_row, m_selectedTiles[i]->m_column);//Remove the tiles
 		}
 	}
 
@@ -355,12 +416,26 @@ void Game::RemoveTile(int row, int col)
 	//Need to add in player behavior for setting stats on how much is offered based on the match.
 	Tile* tile = gameBoard[row][col];
 
-	AddPoints(tile->GetType(), 2);
+	EnemyTile* enemy = dynamic_cast<EnemyTile*>(tile);
 
-	if (tile != NULL)
+	if (enemy) 
 	{
-		tile->Destroy();
+		if (enemy->GetHealth() <= 0)
+		{
+			enemy->Destroy();
+			AddPoints(enemy->GetType(), 5);
+			gameBoard[row][col] = NULL;
+		}
 	}
+	else
+	{
+		AddPoints(tile->GetType(), 2);
 
-	gameBoard[row][col] = NULL;
+		if (tile != NULL)
+		{
+			tile->Destroy();
+		}
+
+		gameBoard[row][col] = NULL;
+	}
 }
