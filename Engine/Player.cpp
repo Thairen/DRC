@@ -28,6 +28,7 @@ void Player::Update(sf::RenderWindow* window, float dt)
 {
 	GameObject::Update(window, dt);
 	ShowStats(window);
+	BalanceStats();
 }
 
 void Player::ShowStats(sf::RenderWindow* window)
@@ -89,6 +90,17 @@ void Player::ShowStats(sf::RenderWindow* window)
 
 }
 
+void Player::BalanceStats()
+{
+	m_baseAttack->BalanceStat();
+	m_weaponAttack->BalanceStat();
+	m_defense->BalanceStat();
+	m_health->BalanceStat();
+	m_exp->BalanceStat();
+	m_gold->BalanceStat();
+	m_upgrade->BalanceStat();
+}
+
 float Player::Attack(float mod)
 {
 	//Need to take in an add to attack, m_weaponAttack * number of swords matched
@@ -97,5 +109,7 @@ float Player::Attack(float mod)
 
 void Player::TakeDamage(float amount)
 {
+	amount -= m_defense->GetCurrent();
+	m_defense->SubtractCurrent(1);
 	m_health->SubtractCurrent(amount);
 }

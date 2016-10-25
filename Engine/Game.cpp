@@ -54,6 +54,7 @@ void Game::Update(sf::RenderWindow * window, float dt)
 
 	HandleInput(window);
 	ShiftTiles(); //Move tiles down when tiles underneath are destroyed
+	ShowFonts(window);
 
 }
 
@@ -69,7 +70,7 @@ void Game::ShowFonts(sf::RenderWindow* window)
 	{
 		sf::Text gameOverText;
 		gameOverText.setFont(m_mainFont);
-		gameOverText.setString("GAME OVER!");
+		gameOverText.setString("You Have Died.");
 		gameOverText.setCharacterSize(110);
 		gameOverText.setPosition(450, 150);
 		window->draw(gameOverText);
@@ -241,7 +242,7 @@ void Game::Combat()
 		}
 	}
 
-	//Loop for enemies
+	//Loop for enemies to 'kill' (so their damage doesnt apply)
 	for (int i = 0; i < m_selectedTiles.size(); i++)
 	{
 		Tile* current = m_selectedTiles[i];
@@ -357,9 +358,15 @@ void Game::ClearSelected()
 
 	if (m_selectedTiles.size() >= 3)
 	{
+		Combat(); // Do combat if player attacks enemies
+
+		if (player->GetHealth() <= 0)
+		{
+			m_gameOver = true;
+		}
+
 		for (int i = 0; i < m_selectedTiles.size(); i++)
 		{
-			Combat(); // Do combat if player attacks enemies
 			RemoveTile(m_selectedTiles[i]->m_row, m_selectedTiles[i]->m_column);//Remove the tiles
 		}
 	}

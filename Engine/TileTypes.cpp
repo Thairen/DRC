@@ -11,7 +11,6 @@ SwordTile::SwordTile(std::string texturePath, const sf::Vector2f& pos) : Tile(te
 void SwordTile::Destroy()
 {
 	GameObject::Destroy();
-	//ADD Whatever Tile behavior when destroyed ----------------
 }
 
 // Armor CLASS FUNCS ===============================================================
@@ -24,7 +23,6 @@ ArmorTile::ArmorTile(std::string texturePath, const sf::Vector2f& pos) : Tile(te
 void ArmorTile::Destroy()
 {
 	GameObject::Destroy();
-	//ADD Whatever Tile behavior when destroyed ----------------
 }
 
 // Health CLASS FUNCS ===============================================================
@@ -37,7 +35,6 @@ HealthTile::HealthTile(std::string texturePath, const sf::Vector2f& pos) : Tile(
 void HealthTile::Destroy()
 {
 	GameObject::Destroy();
-	//ADD Whatever Tile behavior when destroyed ----------------
 }
 
 // Enemy CLASS FUNCS ===============================================================
@@ -57,7 +54,6 @@ void EnemyTile::Destroy()
 {
 	GameObject::Destroy();
 	delete m_health, m_attack, m_defense, m_exp;
-	//ADD Whatever Tile behavior when destroyed ----------------
 }
 
 void EnemyTile::Draw(sf::RenderWindow* window)
@@ -102,7 +98,6 @@ void EnemyTile::ShowStats(sf::RenderWindow* window)
 float EnemyTile::TakeDamage(float dmg)
 {
 	dmg -= m_defense->GetCurrent();
-	float result = 0.f;
 
 	if (dmg > 0)
 	{
@@ -126,5 +121,4 @@ GoldTile::GoldTile(std::string texturePath, const sf::Vector2f& pos) : Tile(text
 void GoldTile::Destroy()
 {
 	GameObject::Destroy();
-	//ADD Whatever Tile behavior when destroyed ----------------
 }

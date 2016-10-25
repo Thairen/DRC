@@ -11,11 +11,15 @@ public:
 	void ShowStats(sf::RenderWindow* window);
 
 	//Adding members
-	void AddArmor(float val) { m_defense->AddCurrent(val); m_upgrade->AddCurrent(val); m_defense->BalanceStat(); m_upgrade->BalanceStat(); }
-	void AddBaseAttack(float val) { m_baseAttack->AddMax(val); m_baseAttack->BalanceStat();}
-	void AddHealth(float val) { m_health->AddCurrent(val); m_health->BalanceStat();}
-	void AddExp(float val) { m_exp->AddCurrent(val); m_exp->BalanceStat();}
-	void AddGold(float val) { m_gold->AddCurrent(val); m_gold->BalanceStat();}
+	void AddArmor(float val) { m_defense->AddCurrent(val); m_upgrade->AddCurrent(val);}
+	void AddBaseAttack(float val) { m_baseAttack->AddMax(val);}
+	void AddHealth(float val) { m_health->AddCurrent(val);}
+	void AddExp(float val) { m_exp->AddCurrent(val);}
+	void AddGold(float val) { m_gold->AddCurrent(val);}
+
+	float GetHealth() { return m_health->GetCurrent(); }
+
+	void BalanceStats();
 
 	float Attack(float mod);
 	void TakeDamage(float mod);
