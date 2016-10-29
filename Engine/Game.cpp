@@ -54,6 +54,7 @@ void Game::Update(sf::RenderWindow * window, float dt)
 
 	HandleInput(window);
 	ShiftTiles(); //Move tiles down when tiles underneath are destroyed
+	AddNewTiles();
 	ShowFonts(window);
 
 }
@@ -117,21 +118,22 @@ void Game::ShiftTiles()
 				}
 				gameBoard[0][j] = NULL;
 				current = gameBoard[i][j];
-
-				AddNewTiles(i, j);
 			}
 		}
 	}
 }
 
-void Game::AddNewTiles(int row, int col)
+void Game::AddNewTiles()
 {
-	for (int i = row - 1; i >= 0; i--)
+	for (int i = row - 1; i >= 0; i--)  // Go through every column first (For loop over each column)
 	{
-		if (gameBoard[0][col] == NULL)
+		for (int j = col - 1; j >= 0; j--)  	// For every row (For loop over each row)
 		{
-			gameBoard[0][col] = CreateTile(sf::Vector2f(350.f + col * 62.f, 100.f + 0 * 62.f), 0, col);
-			AddObject(gameBoard[0][col]);
+			if (gameBoard[i][j] == NULL)
+			{
+				gameBoard[i][j] = CreateTile(sf::Vector2f(350.f + j * 62.f, 100.f + i * 62.f), i, j);
+				AddObject(gameBoard[i][j]);
+			}
 		}
 	}
 }
@@ -146,13 +148,7 @@ bool Game::TilesToDrop(int row, int col)
 		{
 			result = true;
 			break;
-		}
-
-		if (i == 0)
-		{
-			result = true;
-			break;
-		}
+		}		
 	}
 
 	return result;
