@@ -69,11 +69,16 @@ void Game::ShowFonts(sf::RenderWindow* window)
 {
 	if (m_gameOver)
 	{
+		sf::RectangleShape fillBackground; // Fill the background red on game over
+		fillBackground.setSize(sf::Vector2f(2000, 2000));
+		fillBackground.setFillColor(sf::Color::Red);
+
 		sf::Text gameOverText;
 		gameOverText.setFont(m_mainFont);
 		gameOverText.setString("You Have Died.");
 		gameOverText.setCharacterSize(110);
 		gameOverText.setPosition(450, 150);
+		window->draw(fillBackground);
 		window->draw(gameOverText);
 	}
 }

@@ -1,9 +1,11 @@
 #pragma once
+#include <string>
+
 class Stat
 {
 public:
-	Stat(float max);
-	
+	Stat(std::string id, float current, float max);
+
 	float GetCurrent() { return m_current; }
 	float GetMax() { return m_max; }
 
@@ -11,16 +13,16 @@ public:
 	void SetCurrent(float val) { m_current = val; }
 	void SetStatToMax() { m_current = m_max; }
 
-	void AddCurrent(float val) { m_current += val; }
+	void SubtractCurrent(float val);
+	void AddCurrent(float val);
+	void MultiplyCurrent(float val);
+	void DivideCurrent(float val);
+
 	void AddMax(float val) { m_current += val; }
-
-	void SubtractCurrent(float val) { m_current -= val; }
-
-	void BalanceStat();
-
 
 private:
 	float m_current;
 	float m_max;
-};
 
+	std::string m_id;
+};

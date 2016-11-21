@@ -19,8 +19,6 @@ public:
 
 	float GetHealth() { return m_health->GetCurrent(); }
 
-	void BalanceStats();
-
 	float Attack(float mod);
 	void TakeDamage(float mod);
 
@@ -34,5 +32,13 @@ private:
 	Stat* m_upgrade;
 
 	sf::Font m_font;
+
+	sf::Sprite goldIcon;
+	sf::Sprite attackIcon;
+	sf::Sprite defenseIcon;
+	sf::Sprite healthIcon;
+	sf::Sprite baseAttackIcon;
+
+	sf::Texture tex;
 };
 

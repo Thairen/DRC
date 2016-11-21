@@ -42,10 +42,10 @@ void HealthTile::Destroy()
 EnemyTile::EnemyTile(std::string texturePath, const sf::Vector2f& pos) : Tile(texturePath, pos)
 {
 	SetType(TileType::Enemy);
-	m_health = new Stat(4.f);
-	m_attack = new Stat(1.f);
-	m_defense = new Stat(0.f);
-	m_exp = new Stat(5.f);
+	m_health = new Stat("Health", 4.0f, 4.0f);
+	m_attack = new Stat("Attack", 1.0f, 1.0f);
+	m_defense = new Stat("Defense", 0.0f, 0.0f);
+	m_exp = new Stat("Exp", 5.f, 5.f);
 
 	m_font.loadFromFile("Fonts/kenpixel_high_square.ttf");
 }
